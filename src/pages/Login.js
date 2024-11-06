@@ -9,6 +9,14 @@ const Login = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const [mail, setMail]= useState("");
+  const [password, setPassword]= useState("");
+  const [isAdmine, setIsAdmine]= useState(false)
+  const [errorMessage, setErrorMessage] = useState("");
+
+
+  const handelCheckBox= ()=> setIsAdmine(!isAdmine)
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -19,6 +27,25 @@ const Login = () => {
     To get admin credentials
     Use url-  /api/admin?email=${email} with GET method 
     */
+
+    try {
+      const endpoint=isAdmine ? `/api/applicants?email=${email}` : `/api/admin?email=${email}`
+
+      const data = await axios.get(endpoint);
+  
+      if(data && data.password === password){
+        dispatch(setLoggedUser(data))
+  
+        navigate('/dashboard')
+      }else{
+        setErrorMessage("Invalid email or password");
+      }
+    } catch (error) {
+      setErrorMessage("Error logging in. try again")
+
+    }
+
+
   };
 
   return (
@@ -45,7 +72,8 @@ const Login = () => {
           id="userEmail"
           placeholder="your email"
           className="form-control mt-2"
-          required
+          
+          onChange={(e)=>setMail(e.target.value)}
         />
         <input
           type="password"
@@ -54,6 +82,8 @@ const Login = () => {
           placeholder="password"
           className="form-control mt-2"
           required
+
+          onChange={(e)=>setPassword(e.target.value)}
         />
         <p className="text-danger" id="errorMessage">
           Display error message here

@@ -59,6 +59,8 @@ const Login = () => {
               id="userType"
               name="user"
               className="form-check-input"
+              checked={isAdmine}
+              onChange={handelCheckBox}
             />
             <label className="form-check-label ps-2">Admin</label>
           </div>

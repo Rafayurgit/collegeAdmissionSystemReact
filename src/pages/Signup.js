@@ -3,6 +3,16 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 
 const Signup = () => {
+  const [email, setEmail]= useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [mobile, setMobile] = useState("");
+  const [address, setAddress]= useState("");
+  const [markPercentage, setMarkPercentage] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+
   /*To add new user
       Use url-  /api/applicants with POST method 
       requestbody = {

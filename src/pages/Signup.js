@@ -27,13 +27,58 @@ const Signup = () => {
       };
     */
 
+      const handleSubmit = async(e)=>{
+
+        e.preventDefault();
+        setErrorMessage("")
+
+        if(password != confirmPassword){
+          setErrorMessage("password do not match")
+          return;
+        }
+
+        const emailExist= await checkEmailExist(email)
+        if(emailExist){
+          setErrorMessage("email already exist")
+          return;
+        }
+
+        const newUser ={
+          id: new Date().getTime(),
+          email,
+          password,
+          name,
+          age,
+          mobile,
+          address,
+          markPercentage,
+        };
+
+        try {
+          await axios.post(`/api/applicants`, newUser);
+          alert("SignUp successfully");
+        } catch (error) {
+          setErrorMessage("SignUp failed, Try again later")
+        }
+      };
+
   /*To check whether entered email is already registered
       Use url-  /api/applicants?email=${<enteredEmail>} with GET method 
     */
 
+      const checkEmailExist= async (email)=>{
+        try {
+          const response=await axios.get(`/api/applicants?email=${email}`);
+          return response.data.length>0;
+        } catch (error) {
+          setErrorMessage("An Error occured while checking email")
+          return false;
+        }
+      }
+
   return (
     <div>
-      <form className="container mt-2">
+      <form className="container mt-2" onSubmit={handleSubmit}>
         <div className="form-header">
           <h3>Signup</h3>
           <p>Create new account here</p>
@@ -45,6 +90,8 @@ const Signup = () => {
           id="email"
           placeholder="enter your email"
           className="form-control mt-2"
+          value={email}
+          onChange={(e)=>setEmail(e.target.value)}
           required
         />
         <input
@@ -53,6 +100,8 @@ const Signup = () => {
           id="password"
           placeholder="choose password"
           className="form-control mt-2"
+          value={password}
+          onChange={(e)=>setPassword(e.target.value)}
           required
         />
         <input
@@ -61,6 +110,8 @@ const Signup = () => {
           id="confirmpassword"
           placeholder="confirm password"
           className="form-control mt-2"
+          value={confirmPassword}
+          onChange={(e)=>setConfirmPassword(e.target.value)}
           required
         />
         <input
@@ -69,6 +120,8 @@ const Signup = () => {
           id="name"
           placeholder="your name"
           className="form-control mt-2"
+          value={name}
+          onChange={(e)=>setName(e.target.value)}
         />
         <input
           type="number"
@@ -76,6 +129,8 @@ const Signup = () => {
           id="age"
           placeholder="your age"
           className="form-control mt-2"
+          value={age}
+          onChange={(e)=>setAge(e.target.value)}
         />
         <input
           type="number"
@@ -83,6 +138,8 @@ const Signup = () => {
           id="mobile"
           placeholder="your mobile number"
           className="form-control mt-2"
+          value={mobile}
+          onChange={(e)=>setMobile(e.target.value)}
         />
         <textarea
           name="address"
@@ -91,6 +148,8 @@ const Signup = () => {
           id="address"
           placeholder="your address"
           className="form-control mt-2"
+          value={address}
+          onChange={(e)=>setAddress(e.target.value)}
         />
         <input
           type="number"
@@ -98,6 +157,8 @@ const Signup = () => {
           id="markPercentage"
           placeholder="Mark Percentage in 12th grade"
           className="form-control mt-2"
+          value={markPercentage}
+          onChange={(e)=>setMarkPercentage(e.target.value)}
         />
 
         <p className="text-danger" id="errorMessage">

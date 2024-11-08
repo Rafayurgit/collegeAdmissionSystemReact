@@ -10,8 +10,10 @@ const Signup = () => {
   const [age, setAge] = useState("");
   const [mobile, setMobile] = useState("");
   const [address, setAddress]= useState("");
+
   const [markPercentage, setMarkPercentage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+
 
   /*To add new user
       Use url-  /api/applicants with POST method 

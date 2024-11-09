@@ -36,12 +36,14 @@ function ApplicationStatus() {
           </tr>
         </thead>
         <tbody>
-          <tr key={"unique-key"}>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+          {applications.map((app)=>(
+            <tr key={app.id}>
+            <td>{app.id}</td>
+            <td>{app.courseId}</td>
+            <td>{app.courseName}</td>
+            <td>{app.status}</td>
           </tr>
+          ))}
         </tbody>
       </table>
     )}

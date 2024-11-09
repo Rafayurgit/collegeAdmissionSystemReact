@@ -9,6 +9,19 @@ const AddSeats = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [selectedCourse, setSelectedCourse] = useState("")
+  const [newSeatCount, setNewSeatCount] = useState("")
+
+  const courses= useSelector((state)=>state.admissions.courses)
+
+
+
+  useEffect(()=>{
+    if(courses.length ===0){
+      dispatch(getCourses())
+    }
+  },[dispatch, courses.length])
+
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -24,19 +37,35 @@ const AddSeats = () => {
             <select
               className="form-select"
               id="courseSelect"
+              value={selectedCourse}
+              onChange={(e)=>setSelectedCourse(e.target.value)}
             >
               <option value="" disabled>
                 Select Course
               </option>
+              {
+                courses.map((course)=>(
+                  <option key={course.id} value={course.id}>
+                    {course.name}
+                  </option>
+                ))
+              }
             </select>
           </label>
           <label className="px-2" id="availableSeats">
-            Available Seats: --count--
+            Available Seats: {" "}
+            {
+              selectedCourse ? courses.find((course)=>course.id===selectedCourse)
+              ?.availableSeats || "__"
+              : "__"
+            }
             <input
               type="number"
               className="form-control"
               id="newSeatCount"
               placeholder="New count"
+              value={newSeatCount}
+              onChange={(e)=>setNewSeatCount(e.target.value)}
             />
           </label>
           <input

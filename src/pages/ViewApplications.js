@@ -16,10 +16,36 @@ function ViewApplications() {
      To get all course details dispatch 'getCourses' to know seat availability
   */
 
+  useEffect(() => {
+    dispatch(getApplications());
+    dispatch(getCourses());
+  }, [dispatch]);
+
+  const applications = useSelector((state) => state.applications.applications);
+  const courses = useSelector((state) => applications.applications.courses);
+
+  const newApplications = applications.filter(
+    (app) => app.status === "Pending"
+  );
+  const approvedApplications = applications.filter(
+    (app) => app.status === "Approved"
+  );
+  const rejectedApplication = applications.filter(
+    (app) => app.status === "Rejected"
+  );
+
+  const handelStatusChange = async (id, newStatus) => {
+    await dispatch(modifyApplicationStatus({ id, newStatus }));
+    alert(
+      `Application ${
+        newStatus === "approved" ? "Approved" : rejected
+      } successfully`
+    );
+  };
+
   return (
     <div className="container mt-3">
       <h4 className="text-primary">New Applications</h4>
-      <p>No new applications</p> {/* If there are no new applications */}
       <table className="table table-hover mb-5" id="newApplicationsTable">
         <thead>
           <tr>
@@ -33,23 +59,42 @@ function ViewApplications() {
           </tr>
         </thead>
         <tbody>
-          <tr key={"unique-key"}>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>
-              <button className="btn btn-success mx-1">Approve</button>
-              <button className="btn btn-danger mx-1">Reject</button>
-            </td>
-          </tr>
+          {newApplications.length === 0 ? (
+            <tr>
+              <td colSpan="7">No new applications</td>
+            </tr>
+          ) : (
+            newApplications.map((app) => (
+              <tr key={app.id}>
+                <td>{app.id}</td>
+                <td>{app.courseId}</td>
+                <td>{app.courseName}</td>
+                <td>{app.applicantName}</td>
+                <td>{app.applicantEmail}</td>
+                <td>{app.markPercentage}</td>
+                <td>
+                  <button
+                    className="btn btn-success mx-1"
+                    onClick={() => handleStatusChange(app.id, "Approved")}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    className="btn btn-danger mx-1"
+                    onClick={() => handleStatusChange(app.id, "Rejected")}
+                  >
+                    Reject
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
+
       <hr></hr>
       <h4 className="text-primary">Approved Applications</h4>
-      <p>No approved applications</p>
+
       <table className="table table-hover mb-5" id="approvedApplicationsTable">
         <thead>
           <tr>
@@ -62,19 +107,25 @@ function ViewApplications() {
           </tr>
         </thead>
         <tbody>
-          <tr key={"unique-key"}>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-          </tr>
+          {approvedApplications.length === 0 ? (
+            <p>No approved applications</p>
+          ) : (
+            approvedApplications.map((app) => (
+              <tr key={app.id}>
+                <td>{app.id}</td>
+                <td>{app.courseId}</td>
+                <td>{app.courseName}</td>
+                <td>{app.applicantName}</td>
+                <td>{app.applicantEmail}</td>
+                <td>{app.markPercentage}</td>
+              </tr>
+            ))
+          )}
         </tbody>
       </table>
       <hr></hr>
       <h4 className="text-primary">Rejected Applications</h4>
-      <p>No rejected applications</p>
+      
       <table className="table table-hover mb-5" id="rejectedApplicationsTable">
         <thead>
           <tr>
@@ -86,15 +137,23 @@ function ViewApplications() {
             <th scope="col">Mark Percentage</th>
           </tr>
         </thead>
+
         <tbody>
+          {rejectedApplication.length===0 ? (<p>No rejected applications</p>) 
+          :(
+            rejectedApplication.map((app)=>(
           <tr key={"unique-key"}>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
+            <td>{app.id}</td>
+                <td>{app.courseId}</td>
+                <td>{app.courseName}</td>
+                <td>{app.applicantName}</td>
+                <td>{app.applicantEmail}</td>
+                <td>{app.markPercentage}</td>
           </tr>
+            ))
+            
+          )}
+          
         </tbody>
       </table>
     </div>
